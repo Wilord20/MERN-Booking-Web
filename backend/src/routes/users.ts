@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
+// -api/users/register
 router.post("/register", async (req: Request, res: Response) => {
   try {
     let user = await User.findOne({
@@ -35,3 +36,5 @@ router.post("/register", async (req: Request, res: Response) => {
     res.status(500).json({ message: "Algo salió mal" });
   }
 });
+
+export default router;
