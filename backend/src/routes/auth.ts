@@ -1,20 +1,16 @@
+import { check, validationResult } from "express-validator";
 import express, { Request, Response } from "express";
 import User from "../models/user";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { check, validationResult } from "express-validator";
 
 const router = express.Router();
 
-// -api/users/register
 router.post(
-  "/register",
+  "/login",
   [
-    check("firstName", "El nombre es requerido").isString(),
-    check("lastName", "El apellido es requerido").isString(),
     check("email", "El email es requerido").isEmail(),
-    check("password", "La contraseña debe ser mayor a 6 carácteres").isLength({
-      min: 6,
-    }),
+    check("password", "La contraseña es requerida").isLength({ min: 6 }),
   ],
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -22,17 +18,18 @@ router.post(
       return res.status(400).json({ message: errors.array() });
     }
 
-    try {
-      let user = await User.findOne({
-        email: req.body.email,
-      });
+    const { email, password } = req.body;
 
-      if (user) {
-        return res.status(400).json({ message: "El usuario ya existe" });
+    try {
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(400).json({ message: "Credenciales inválidas" });
       }
 
-      user = new User(req.body);
-      await user.save();
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ message: "Credenciales inválidas" });
+      }
 
       const token = jwt.sign(
         { userId: user.id },
@@ -46,7 +43,7 @@ router.post(
         maxAge: 86400000,
       });
 
-      return res.status(200);
+      res.status(200).json({ userId: user._id });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Algo salió mal" });
