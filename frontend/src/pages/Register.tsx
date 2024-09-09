@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 
-type RegisterFormData = {
+export type RegisterFormData = {
   // Define los campos del formulario
   email: string;
   password: string;
