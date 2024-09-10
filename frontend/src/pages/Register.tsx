@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import * as apiClient from "../api-client"; // Importar todas las funciones de la API
 import { useAppContext } from "../contexts/AppContext";
+import { useNavigate } from "react-router-dom";
 
 export type RegisterFormData = {
   // Define los campos del formulario
@@ -13,6 +14,7 @@ export type RegisterFormData = {
 };
 
 const Register = () => {
+  const navigate = useNavigate(); // Hook de React Router para navegar entre páginas
   const {showToast} = useAppContext(); // Extraer la función para mostrar los mensajes de la app
 
   const {
@@ -25,6 +27,7 @@ const Register = () => {
   const mutation = useMutation(apiClient.register, {
     onSuccess: () => {
       showToast({message: "Usuario registrado exitosamente", type: "success"}); // Mostrar un mensaje de éxito
+      navigate("/"); // Redirigir al usuario a la página principal
     },
     onError: (error: Error) => {
       showToast({message: error.message, type: "error"}); // Mostrar un mensaje de error
