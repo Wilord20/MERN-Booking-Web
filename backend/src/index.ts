@@ -4,6 +4,7 @@ import "dotenv/config";
 import mongoose from 'mongoose';
 import userRoutes from './routes/users';
 import authRoutes from './routes/auth';
+import cookieParser from 'cookie-parser';
 
 mongoose.connect(process.env.MONGO_DB_CONNEX as string).then(() => {
   console.log('Connected to MongoDB');
@@ -12,9 +13,13 @@ mongoose.connect(process.env.MONGO_DB_CONNEX as string).then(() => {
 });
 
 const app = express();
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL, 
+  credentials: true, // Habilitar las credenciales para que el frontend pueda enviar cookies
+})); // Habilitar CORS para que el frontend pueda hacer peticiones
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);

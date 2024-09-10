@@ -6,6 +6,7 @@ export const register = async (formData: RegisterFormData) => {
   const response = await fetch(`${API_BASE_URL}/api/users/register`, {
     // Hacer una petición POST a la API
     method: "POST",
+    credentials: "include", // Enviar las cookies de la sesión
     headers: {
       "Content-Type": "application/json",
     },
