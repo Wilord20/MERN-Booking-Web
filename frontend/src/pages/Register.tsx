@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import * as apiClient from "../api-client"; // Importar todas las funciones de la API
 import { useAppContext } from "../contexts/AppContext";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,7 @@ export type RegisterFormData = {
 };
 
 const Register = () => {
+  const queryClient = useQueryClient(); // Hook de React Query para acceder al cache de queries
   const navigate = useNavigate(); // Hook de React Router para navegar entre páginas
   const {showToast} = useAppContext(); // Extraer la función para mostrar los mensajes de la app
 
@@ -25,8 +26,9 @@ const Register = () => {
   } = useForm<RegisterFormData>(); // Inicializar el hook de useForm con el tipo de datos de la forma
 
   const mutation = useMutation(apiClient.register, {
-    onSuccess: () => {
+    onSuccess: async () => {
       showToast({message: "Usuario registrado exitosamente", type: "success"}); // Mostrar un mensaje de éxito
+      await queryClient.invalidateQueries("validateToken"); // Invalidar la query de validateToken para no tener que recarga la pagina
       navigate("/"); // Redirigir al usuario a la página principal
     },
     onError: (error: Error) => {

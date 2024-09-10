@@ -24,7 +24,7 @@ export const AppContextProvider = ({
   const [toast, setToast] = useState<ToastMessage | undefined>(undefined); // Inicializar el estado del mensaje
 
   const { isError } = useQuery("validateToken", apiClient.validateToken, {
-    retry: false,
+    retry: false, // No reintentar la petición si falla
   }); // Validar el token
 
   return (

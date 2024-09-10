@@ -57,4 +57,11 @@ router.get("/validate-token", verifyToken, async (req: Request, res: Response) =
   res.status(200).send({ userId: req.userId });
 });
 
+router.post("/logout", async (req: Request, res: Response) => { // Rura para invalidar el token
+  res.cookie("auth_token", "", {
+    expires: new Date(0), // Establecer la fecha de expiración a una fecha pasada
+  });
+  res.send();
+});
+
 export default router;
