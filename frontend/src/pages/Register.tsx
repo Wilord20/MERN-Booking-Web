@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import * as apiClient from "../api-client"; // Importar todas las funciones de la API
+import { useAppContext } from "../contexts/AppContext";
 
 export type RegisterFormData = {
   // Define los campos del formulario
@@ -12,6 +13,8 @@ export type RegisterFormData = {
 };
 
 const Register = () => {
+  const {showToast} = useAppContext(); // Extraer la función para mostrar los mensajes de la app
+
   const {
     register,
     watch, // Función para observar los cambios en un campo
@@ -21,10 +24,10 @@ const Register = () => {
 
   const mutation = useMutation(apiClient.register, {
     onSuccess: () => {
-      console.log("Usuario registrado exitosamente");
+      showToast({message: "Usuario registrado exitosamente", type: "success"}); // Mostrar un mensaje de éxito
     },
     onError: (error: Error) => {
-      console.error(error.message);
+      showToast({message: error.message, type: "error"}); // Mostrar un mensaje de error
     },
   });
 
