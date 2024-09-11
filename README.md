@@ -1,2 +1,2 @@
 # Working on it...
-You can see my progress on my Linkedin. Link in my profile
+You can see the progress on Linkedin. Link in my profile
