@@ -68,7 +68,7 @@ const SignIn = () => {
       </label>
       <span className="flex items-center justify-between">
         <span className="text-sm">
-          ¿No tienes una cuenta? <Link className="underline" to="/register">Crea tu cuenta aquí</Link>
+          ¿No tienes una cuenta? <Link className="underline" to="/register"> Crea tu cuenta aquí</Link>
         </span>
         <button
           type="submit"

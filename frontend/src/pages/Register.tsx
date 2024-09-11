@@ -116,7 +116,7 @@ const Register = () => {
       </label>
       <span className="flex items-center justify-between">
       <span className="text-sm">
-          ¿Ya tienes una cuenta? <Link className="underline" to="/sign-in">Inicia sesión aquí</Link>
+          ¿Ya tienes una cuenta? <Link className="underline" to="/sign-in"> Inicia sesión aquí</Link>
         </span>
         <button
           type="submit"
