@@ -1,2 +1,5 @@
 backend/.env
 backend/.env.e2e
+node_modules
+.vscode
+dist
