@@ -7,6 +7,7 @@ import authRoutes from "./routes/auth";
 import cookieParser from "cookie-parser";
 import path from "path";
 import {v2 as cloudinary} from "cloudinary";
+import hotelRoutes from "./routes/my-hotels";
 
 cloudinary.config({ // Configuración de Cloudinary
   cloud_name: process.env.cloudinary_cloud_name,
@@ -39,6 +40,7 @@ app.use(express.static(path.join(__dirname, "../../frontend/dist"))); // Servir 
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/my-hotels", hotelRoutes);
 
 app.listen(7000, () => {
   console.log("Server is running on port 7000");
