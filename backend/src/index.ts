@@ -8,7 +8,7 @@ import cookieParser from "cookie-parser";
 import path from "path";
 import {v2 as cloudinary} from "cloudinary";
 
-cloudinary.config({
+cloudinary.config({ // Configuración de Cloudinary
   cloud_name: process.env.cloudinary_cloud_name,
   api_key: process.env.cloudinary_api_key,
   api_secret: process.env.cloudinary_api_secret
