@@ -1,5 +1,6 @@
 import { RegisterFormData } from "./pages/Register";
 import { SignInFormData } from './pages/SignIn';
+import { HotelFormData } from './forms/ManageHotelForm/ManageHotelForm';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ""; // Obtener la URL base de la API desde las variables de entorno
 
@@ -65,3 +66,17 @@ export const signOut = async () => {
     throw new Error("Algo salió mal");
   }
 };
+
+export const addMyHotel = async (HotelFormData: FormData) => {
+  const response = await fetch(`${API_BASE_URL}/api/my-hotels`, {
+    method: "POST",
+    credentials: "include",
+    body: HotelFormData,
+  });
+
+  if (!response.ok) {
+    throw new Error("Error al agregar el hotel");
+  }
+
+  return response.json();
+}
