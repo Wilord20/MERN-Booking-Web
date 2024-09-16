@@ -1,6 +1,5 @@
 import { RegisterFormData } from "./pages/Register";
 import { SignInFormData } from './pages/SignIn';
-import { HotelFormData } from './forms/ManageHotelForm/ManageHotelForm';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ""; // Obtener la URL base de la API desde las variables de entorno
 
