@@ -1,5 +1,6 @@
 import { RegisterFormData } from "./pages/Register";
-import { SignInFormData } from './pages/SignIn';
+import { SignInFormData } from "./pages/SignIn";
+import { HotelType } from '../../backend/src/models/hotel';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ""; // Obtener la URL base de la API desde las variables de entorno
 
@@ -44,15 +45,15 @@ export const signIn = async (formData: SignInFormData) => {
 };
 
 export const validateToken = async () => {
-    const response = await fetch(`${API_BASE_URL}/api/auth/validate-token`, {
-      credentials: "include",
-    });
+  const response = await fetch(`${API_BASE_URL}/api/auth/validate-token`, {
+    credentials: "include",
+  });
 
-    if (!response.ok) {
-      throw new Error("Token inválido");
-    }
+  if (!response.ok) {
+    throw new Error("Token inválido");
+  }
 
-    return response.json();
+  return response.json();
 };
 
 export const signOut = async () => {
@@ -78,4 +79,17 @@ export const addMyHotel = async (HotelFormData: FormData) => {
   }
 
   return response.json();
-}
+};
+
+// Obtener los hoteles del usuario desde la API de backend (GET /api/my-hotels) y devolverlos
+export const fetchMyHotels = async (): Promise<HotelType[]> => {
+  const response = await fetch(`${API_BASE_URL}/api/my-hotels`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    throw new Error("Error al obtener los hoteles");
+  }
+
+  return response.json();
+};

@@ -19,7 +19,8 @@ const upload = multer({
 router.post(
   "/",
   verifyToken, // Verificar el token del usuario
-  [ // Validar los datos del hotel
+  [
+    // Validar los datos del hotel
     body("name").notEmpty().withMessage("Nombre es requerido"),
     body("city").notEmpty().withMessage("Ciudad es requerida"),
     body("counrtry").notEmpty().withMessage("El país es requerido"),
@@ -68,5 +69,14 @@ router.post(
     }
   }
 );
+
+router.get("/", verifyToken, async (req: Request, res: Response) => {
+  try {
+    const hotels = await Hotel.find({ userId: req.userId }); // Buscar los hoteles del usuario
+    res.json(hotels); // Responder con los hoteles encontrados
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener los hoteles" });
+  }
+});
 
 export default router;
