@@ -42,6 +42,10 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/my-hotels", hotelRoutes);
 
+app.get("*", (req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
+}); // Ruta para manejar todas las demás rutas, en este caso algunas que usan condicionales. Como el acceso de un usuario a una ruta que no existe
+
 app.listen(7000, () => {
   console.log("Server is running on port 7000");
 });
