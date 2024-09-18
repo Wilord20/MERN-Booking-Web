@@ -9,16 +9,16 @@ const ImagesSection = () => {
     setValue,
   } = useFormContext<HotelFormData>();
 
-  const existingImageUrls = watch("imageUrls");
+  const existingImageUrls = watch("imageUrls"); // Obtener las URL de las imágenes existentes
 
   const handleDelete = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>, // Click del botón
     imageUrl: string
   ) => {
-    event.preventDefault();
+    event.preventDefault(); // Prevenir que el formulario se envíe
     setValue(
       "imageUrls",
-      existingImageUrls.filter((url) => url !== imageUrl)
+      existingImageUrls.filter((url) => url !== imageUrl) // Filtrar las URL de las imágenes con la seleccionada
     );
   };
 
@@ -35,7 +35,7 @@ const ImagesSection = () => {
                   onClick={(event) => handleDelete(event, url)}
                   className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 text-white"
                 >
-                  Delete
+                  Borrar
                 </button>
               </div>
             ))}
