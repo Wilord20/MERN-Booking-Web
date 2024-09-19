@@ -62,16 +62,40 @@ test("Debería permitir al usuario ver sus hoteles", async ({ page }) => {
 
   // Revisar que haya hoteles en la lista.
   await expect(page.getByText("Mis hoteles")).toBeVisible();
-  await expect(page.getByText("Test Hotel")).toBeVisible();
-  await expect(page.getByText('Descripción de prueba para el hotel')).toBeVisible();
+  await expect(page.getByText("Fiesta Inn")).toBeVisible();
+  await expect(page.getByText('Lorem ipsum')).toBeVisible();
 
-  await expect(page.getByText("Test Ciudad, Test País")).toBeVisible();
-  await expect(page.getByText("Budget")).toBeVisible();
-  await expect(page.getByText("$1000 por noche")).toBeVisible();
-  await expect(page.getByText("2 adultos, 4 niños")).toBeVisible();
-  await expect(page.getByText("3 Star Rating")).toBeVisible();
+  await expect(page.getByText("Mexico, México")).toBeVisible();
+  await expect(page.getByText("Luxury")).toBeVisible();
+  await expect(page.getByText("$1500 por noche")).toBeVisible();
+  await expect(page.getByText("3 adultos, 0 niños")).toBeVisible();
+  await expect(page.getByText("4 Star Rating")).toBeVisible();
 
-  await expect(page.getByRole("link", { name: "Ver detalles" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Agregar hotel" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Ver detalles" }).first()).toBeVisible();
+  await expect(page.getByRole("link", { name: "Agregar hotel" }).first()).toBeVisible();
 
+});
+
+test("Debería permitir al usuario actualizar un hotel", async ({ page }) => {
+  await page.goto(`${UI_URL}/my-hotels`);
+
+  await page.getByRole("link", { name: "Ver detalles" }).first().click();
+  await page.waitForSelector('[name="name"]', {state: "attached"}); // Esperar a que el formulario de detalles del hotel esté presente.
+
+  await expect(page.locator('[name="name"]')).toHaveValue("Test Hotel");
+  await page.locator('[name="city"]').fill("Test Ciudad Actualizado");
+  await page.locator('[name="country"]').fill("Test País Actualizado");
+  await page.getByRole("button", { name: "Guardar" }).click();
+
+  await expect(page.getByText("Hotel actualizado exitosamente")).toBeVisible();
+
+  await page.reload();
+
+  await expect(page.locator('[name="city"]')).toHaveValue("Test Ciudad Actualizado");
+  await expect(page.locator('[name="country"]')).toHaveValue("Test País Actualizado");
+
+  await page.locator('[name="city"]').fill("Test Ciudad");
+  await page.locator('[name="country"]').fill("Test País");
+
+  await page.getByRole("button", { name: "Guardar" }).click();
 });

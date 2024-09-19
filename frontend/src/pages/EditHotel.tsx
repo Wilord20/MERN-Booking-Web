@@ -20,7 +20,7 @@ const EditHotel = () => {
       onError: () => {
         showToast({ message: "Error al actualizar", type: "error" });      },
       onSuccess: () => {
-        showToast({ message: "Hotel actualizado", type: "success" });
+        showToast({ message: "Hotel actualizado exitosamente", type: "success" });
       },
     });
 
