@@ -2,6 +2,7 @@ import { useQuery } from "react-query";
 import { useSearchContext } from "../contexts/SearchContext";
 import * as apiClient from "../api-client";
 import { useState } from "react";
+import SearchResultsCard from "../components/SearchResultsCard";
 
 const Search = () => {
   const search = useSearchContext();
@@ -48,10 +49,13 @@ const Search = () => {
       <div className="flex justify-between items-center">
         <span className="text-xl font-bold">
           {hotelData?.pagination.total} Hoteles encontrados
-          {search.destination ? ` in ${search.destination}` : ""}
+          {search.destination ? ` en ${search.destination}` : ""}
         </span>
        
       </div>
+      {hotelData?.data.map((hotel) => (
+        <SearchResultsCard hotel={hotel}/>
+      ))}
     </div>
   </div>
   );

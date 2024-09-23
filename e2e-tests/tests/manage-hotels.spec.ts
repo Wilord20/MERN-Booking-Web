@@ -67,7 +67,7 @@ test("Debería permitir al usuario ver sus hoteles", async ({ page }) => {
 
   await expect(page.getByText("Mexico, México")).toBeVisible();
   await expect(page.getByText("Luxury")).toBeVisible();
-  await expect(page.getByText("$1500 por noche")).toBeVisible();
+  await expect(page.getByText("MXN 1500 por noche")).toBeVisible();
   await expect(page.getByText("3 adultos, 0 niños")).toBeVisible();
   await expect(page.getByText("4 Star Rating")).toBeVisible();
 
