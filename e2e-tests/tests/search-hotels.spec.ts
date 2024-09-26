@@ -24,7 +24,7 @@ test.beforeEach(async ({ page }) => {
   await expect(page.getByText("Inicio de sesión exitoso")).toBeVisible();
 });
 
-test("should show hotel search results", async ({ page }) => {
+test("Debería mostrar hoteles encontrados", async ({ page }) => {
   await page.goto(UI_URL);
 
   await page.getByPlaceholder("¿A dónde te diriges?").fill("Test País");
@@ -34,13 +34,14 @@ test("should show hotel search results", async ({ page }) => {
   await expect(page.getByText("Test Hotel").first()).toBeVisible();
 });
 
-test("should show hotel detail", async ({ page }) => {
+test("Debería mostrar detalles de un hotel", async ({ page }) => {
   await page.goto(UI_URL);
 
-  await page.getByPlaceholder("Where are you going?").fill("Dublin");
-  await page.getByRole("button", { name: "Search" }).click();
+  await page.getByPlaceholder("¿A dónde te diriges?").fill("Test País");
+  await page.getByRole("button", { name: "Buscar" }).click();
 
-  await page.getByText("Dublin Getaways").click();
+  await page.getByText("Test Hotel").first().click();
   await expect(page).toHaveURL(/detail/);
-  await expect(page.getByRole("button", { name: "Book now" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Reserva ahora" })).toBeVisible();
 });
+

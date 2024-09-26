@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 import * as apiClient from "../api-client";
 import { useAppContext } from "../contexts/AppContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export type SignInFormData = {
   email: string;
@@ -13,6 +13,7 @@ const SignIn = () => {
   const navigate = useNavigate(); // Hook de React Router para navegar entre páginas
   const { showToast } = useAppContext();
   const queryClient = useQueryClient();
+  const location = useLocation();
 
   const {
     register,
@@ -24,7 +25,7 @@ const SignIn = () => {
     onSuccess: async () => {
       showToast({ message: "Inicio de sesión exitoso", type: "success" });
         await queryClient.invalidateQueries("validateToken");
-      navigate("/");
+      navigate(location.state?.from?.pathname || "/"); // Redirigir a la página anterior si se hizo un intento de acceso no autorizado
     },
     onError: (error: Error) => {
       showToast({ message: error.message, type: "error" });
