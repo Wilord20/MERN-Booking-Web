@@ -9,13 +9,6 @@ type Props = {
   hotel: HotelType;
 };
 
-const options = {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  };
-
 const BookingDetailsSummary = ({
     checkIn,
     checkOut,
