@@ -27,7 +27,7 @@ export const SearchContextProvider = ({
   children,
 }: SearchContextProviderProps) => {
   const [destination, setDestination] = useState<string>(
-    () => sessionStorage.getItem("destination") || ""
+    () => sessionStorage.getItem("destination") || "" // Se encarga de obtener el valor de la variable de sesion, sino existe, se asigna un string vacio.
   );
   const [checkIn, setCheckIn] = useState<Date>(
     () =>
@@ -64,7 +64,7 @@ export const SearchContextProvider = ({
       setHotelId(hotelId);
     }
 
-    sessionStorage.setItem("destination", destination);
+    sessionStorage.setItem("destination", destination); // Se encarga de guardar el valor de la variable de sesion.
     sessionStorage.setItem("checkIn", checkIn.toISOString());
     sessionStorage.setItem("checkOut", checkOut.toISOString());
     sessionStorage.setItem("adultCount", adultCount.toString());

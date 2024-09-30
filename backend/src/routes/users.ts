@@ -2,8 +2,23 @@ import express, { Request, Response } from "express";
 import User from "../models/user";
 import jwt from "jsonwebtoken";
 import { check, validationResult } from "express-validator";
+import verifyToken from "../middleware/auth";
 
 const router = express.Router();
+
+router.get("/me", verifyToken ,async (req: Request, res: Response) => {
+  const userId = req.userId;
+  try {
+    const user = await User.findById(userId).select("-password"); // Excluimos la contraseña en la respuesta
+    if(!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+    res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Algo salió mal" });
+  }
+});
 
 // -api/users/register
 router.post(
