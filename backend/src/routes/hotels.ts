@@ -1,6 +1,10 @@
 import express, { Request, Response } from "express";
 import Hotel from "../models/hotel";
-import { HotelSearchResponse } from "../shared/types";
+import {
+  BookingType,
+  HotelSearchResponse,
+  PaymentIntentResponse,
+} from "../shared/types";
 import { param, validationResult } from "express-validator";
 import Stripe from "stripe";
 import verifyToken from "../middleware/auth";
@@ -141,12 +145,12 @@ router.post(
     // El id del hotel
     // El id del usuario
 
-    const {numberOfNights} = req.body;
+    const { numberOfNights } = req.body;
     const hotelId = req.params.hotelId;
 
     const hotel = await Hotel.findById(hotelId);
-    if(!hotel) {
-      return res.status(404).json({message: "Hotel no encontrado"});
+    if (!hotel) {
+      return res.status(404).json({ message: "Hotel no encontrado" });
     }
 
     const totalCost = hotel.pricePerNight * numberOfNights;
@@ -156,13 +160,13 @@ router.post(
       currency: "mxn",
       metadata: {
         hotelId,
-        userId: req.userId
-      }
+        userId: req.userId,
+      },
     });
 
-    if(!paymentIntent.client_secret) {
-      return res.status(500).json({message: "Algo salió mal"});
-    };
+    if (!paymentIntent.client_secret) {
+      return res.status(500).json({ message: "Algo salió mal" });
+    }
 
     const response = {
       paymentIntentId: paymentIntent.id,
@@ -171,6 +175,57 @@ router.post(
     };
 
     res.send(response);
+  }
+);
+
+router.post(
+  "/:hotelId/bookings",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    try {
+      const PaymentIntentId = req.body.paymentIntentId;
+
+      const paymentIntent = await stripe.paymentIntents.retrieve(
+        PaymentIntentId as string
+      );
+
+      if (!paymentIntent) {
+        return res.status(404).json({ message: "Pago no encontrado" });
+      }
+
+      if (
+        paymentIntent.metadata.hotelId !== req.params.hotelId ||
+        paymentIntent.metadata.userId !== req.userId
+      ) {
+        return res.status(400).json({ message: "El pago no correspondiente" });
+      }
+
+      if (paymentIntent.status !== "succeeded") {
+        return res.status(400).json({
+          message: `El pago no ha sido completado. Estado: ${paymentIntent.status}`,
+        });
+      }
+
+      const newBooking: BookingType = {
+        ...req.body,
+        userId: req.userId,
+      };
+
+      const hotel = await Hotel.findOneAndUpdate(
+        { _id: req.params.hotelId },
+        { $push: { bookings: newBooking } }
+      );
+
+      if (!hotel) {
+        return res.status(404).json({ message: "Hotel no encontrado" });
+      }
+
+      await hotel.save();
+      res.status(200).send();
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Algo salió mal" });
+    }
   }
 );
 
