@@ -2,6 +2,10 @@ import express, { Request, Response } from "express";
 import Hotel from "../models/hotel";
 import { HotelSearchResponse } from "../shared/types";
 import { param, validationResult } from "express-validator";
+import Stripe from "stripe";
+import verifyToken from "../middleware/auth";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 const router = express.Router();
 
@@ -64,10 +68,10 @@ router.get(
 
     const id = req.params.id.toString();
 
-    try{
+    try {
       const hotel = await Hotel.findById(id);
       res.json(hotel);
-    }catch(error){
+    } catch (error) {
       console.log(error);
       res.status(500).json({ message: "Algo salió mal" });
     }
@@ -128,5 +132,46 @@ const constructSearchQuery = (queryParams: any) => {
 
   return constructedQuery;
 };
+
+router.post(
+  "/:hotelId/bookings/payment-intent",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    // Costo total
+    // El id del hotel
+    // El id del usuario
+
+    const {numberOfNights} = req.body;
+    const hotelId = req.params.hotelId;
+
+    const hotel = await Hotel.findById(hotelId);
+    if(!hotel) {
+      return res.status(404).json({message: "Hotel no encontrado"});
+    }
+
+    const totalCost = hotel.pricePerNight * numberOfNights;
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: totalCost,
+      currency: "mxn",
+      metadata: {
+        hotelId,
+        userId: req.userId
+      }
+    });
+
+    if(!paymentIntent.client_secret) {
+      return res.status(500).json({message: "Algo salió mal"});
+    };
+
+    const response = {
+      paymentIntentId: paymentIntent.id,
+      clientSecret: paymentIntent.client_secret.toString(),
+      totalCost,
+    };
+
+    res.send(response);
+  }
+);
 
 export default router;
