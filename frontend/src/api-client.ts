@@ -1,5 +1,6 @@
 import { RegisterFormData } from "./pages/Register";
 import { SignInFormData } from "./pages/SignIn";
+import { BookingFormData } from './forms/BookingForm/BookingForm';
 import {
   HotelSearchResponse,
   HotelType,
@@ -216,4 +217,20 @@ export const createPaymentIntent = async (
   }
 
   return response.json();
+};
+
+export const createBooking = async(formData: BookingFormData) => {
+  const response = await fetch(`${API_BASE_URL}/api/hotels/${formData.hotelId}/bookings`, {
+    credentials: "include",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
+  });
+
+  if (!response.ok) {
+    throw new Error("Error al crear la reservación");
+  }
+
 };

@@ -156,7 +156,7 @@ router.post(
     const totalCost = hotel.pricePerNight * numberOfNights;
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: totalCost,
+      amount: totalCost * 100,
       currency: "mxn",
       metadata: {
         hotelId,
@@ -197,7 +197,7 @@ router.post(
         paymentIntent.metadata.hotelId !== req.params.hotelId ||
         paymentIntent.metadata.userId !== req.userId
       ) {
-        return res.status(400).json({ message: "El pago no correspondiente" });
+        return res.status(400).json({ message: "El pago no es correspondiente" });
       }
 
       if (paymentIntent.status !== "succeeded") {
